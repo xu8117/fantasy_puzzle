@@ -1,15 +1,18 @@
 #[allow(lint(self_transfer))]
 module lottery::game {
-    use lottery::drand_lib::{derive_randomness, verify_drand_signature, safe_selection};
-    use sui::object::{Self, UID, ID};
-    use sui::transfer;
-    use sui::tx_context::{Self, TxContext};
-    use sui::coin::{Self, Coin};
-    use sui::balance::{Self, Balance};
-    use sui::sui::SUI;
-    use sui::clock::{Self, Clock};
     use std::option::{Self, Option};
     use std::vector;
+
+    use sui::balance::{Self, Balance};
+    use sui::clock::{Self, Clock};
+    use sui::coin::{Self, Coin};
+    use sui::object::{Self, ID, UID};
+    use sui::sui::SUI;
+    use sui::transfer;
+    use sui::tx_context::{Self, TxContext};
+    use lottery::drand_lib::{derive_randomness, safe_selection, verify_drand_signature};
+
+    #[test_only] use sui::test_scenario as ts;
 
     const EPaymentTooLow : u64 = 0;
     const EWrongLottery : u64 = 1;
@@ -56,7 +59,7 @@ module lottery::game {
             winningTicket: option::none(),
             ticketPrice,
             reward: balance::zero(),
-            status: ACTIVE, 
+            status: ACTIVE,
             winnerClaimed: false,
         };
 
@@ -135,7 +138,7 @@ module lottery::game {
     // Lottery Players can check if they won
     public fun checkIfWinner(lottery: &mut Lottery, player: PlayerRecord, ctx: &mut TxContext): bool {
         let PlayerRecord {id, lotteryId, tickets } = player;
-        
+
         // check if user is calling from right lottery
         assert!(object::id(lottery) == lotteryId, EWrongLottery);
 
@@ -146,7 +149,7 @@ module lottery::game {
         let winningTicket = option::borrow(&lottery.winningTicket);
 
         // check if winning ticket exists in lottery tickets
-        let isWinner = vector::contains(&tickets, winningTicket);   
+        let isWinner = vector::contains(&tickets, winningTicket);
 
         if (isWinner){
             // check that winner has not claimed
@@ -159,12 +162,12 @@ module lottery::game {
 
             // wrap reward with coin
             let reward = coin::take(&mut lottery.reward, amount, ctx);
-           
+
             transfer::public_transfer(reward, tx_context::sender(ctx));
 
-            lottery.winnerClaimed = true ; 
+            lottery.winnerClaimed = true ;
         };
-        
+
         // delete player record
         object::delete(id);
 
@@ -187,7 +190,6 @@ module lottery::game {
     }
 
     // Tests
-    #[test_only] use sui::test_scenario as ts;
     #[test_only] const Player1: address = @0xA;
     #[test_only] const Player2: address = @0xB;
     #[test_only] const Player3: address = @0xC;
@@ -359,12 +361,12 @@ module lottery::game {
 
         // check winners for player 1, 2 and 3 and confirm
         {
-            testCheckIfWinner(&mut ts, Player1);           
+            testCheckIfWinner(&mut ts, Player1);
         };
 
         // try to claim again
         {
-            testCheckIfWinner(&mut ts, Player1);           
+            testCheckIfWinner(&mut ts, Player1);
         };
 
         clock::destroy_for_testing(clock);
@@ -405,7 +407,7 @@ module lottery::game {
             testBuyTickets(&mut ts, Player3, 30, &clock);
         };
 
-        
+
         clock::destroy_for_testing(clock);
         ts::end(ts);
     }
@@ -452,7 +454,7 @@ module lottery::game {
             testBuyTickets(&mut ts, Player2, 20, &clock);
             testBuyTickets(&mut ts, Player3, 10, &clock);
         };
-        
+
         clock::destroy_for_testing(clock);
         ts::end(ts);
     }
