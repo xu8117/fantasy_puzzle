@@ -1,5 +1,3 @@
-import {Link} from "@nextui-org/link";
-
 import {Head} from "./head";
 
 import {Navbar} from "@/components/navbar";
@@ -16,6 +14,7 @@ export default function DefaultLayout({
             <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
                 {children}
             </main>
+            {/*
             <footer className="w-full flex items-center justify-center py-3">
                 <Link
                     isExternal
@@ -27,6 +26,7 @@ export default function DefaultLayout({
                     <p className="text-primary">NextUI</p>
                 </Link>
             </footer>
+*/}
         </div>
     );
 }
