@@ -4,7 +4,9 @@ import {Navbar} from "@/components/navbar";
 
 import '@mysten/dapp-kit/dist/index.css';
 import {getFullnodeUrl} from '@mysten/sui.js/client';
-import {QueryClient} from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
+
 
 const queryClient = new QueryClient();
 const networks = {
@@ -21,11 +23,17 @@ export default function DefaultLayout({
 }) {
     return (
         <div className="relative flex flex-col h-screen">
-            <Head/>
-            <Navbar/>
-            <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
-                {children}
-            </main>
+            <QueryClientProvider client={queryClient}>
+                <SuiClientProvider networks={networks} defaultNetwork="devnet">
+                    <WalletProvider>
+                        <Head/>
+                        <Navbar/>
+                        <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
+                            {children}
+                        </main>
+                    </WalletProvider>
+                </SuiClientProvider>
+            </QueryClientProvider>
         </div>
     );
 }
