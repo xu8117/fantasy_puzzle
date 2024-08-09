@@ -66,6 +66,6 @@ export const siteConfig = {
     twitter: "https://twitter.com/xu8117",
     docs: "https://github.com/xu8117/fantasy_puzzle",
     // discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://github.com/sponsors/xu8117",
+    sponsor: "https://github.com/sponsors/xu8117"
   },
 };

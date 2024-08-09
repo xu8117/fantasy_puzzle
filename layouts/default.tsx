@@ -2,6 +2,18 @@ import {Head} from "./head";
 
 import {Navbar} from "@/components/navbar";
 
+import '@mysten/dapp-kit/dist/index.css';
+import {getFullnodeUrl} from '@mysten/sui.js/client';
+import {QueryClient} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+const networks = {
+    localnet: {url: getFullnodeUrl('localnet')},
+    devnet: {url: getFullnodeUrl('devnet')},
+    testnet: {url: getFullnodeUrl('testnet')},
+    mainnet: {url: getFullnodeUrl('mainnet')},
+};
+
 export default function DefaultLayout({
                                           children,
                                       }: {
@@ -14,19 +26,6 @@ export default function DefaultLayout({
             <main className="container mx-auto max-w-7xl px-6 flex-grow pt-16">
                 {children}
             </main>
-            {/*
-            <footer className="w-full flex items-center justify-center py-3">
-                <Link
-                    isExternal
-                    className="flex items-center gap-1 text-current"
-                    href="https://nextui-docs-v2.vercel.app?utm_source=next-pages-template"
-                    title="nextui.org homepage"
-                >
-                    <span className="text-default-600">Powered by</span>
-                    <p className="text-primary">NextUI</p>
-                </Link>
-            </footer>
-*/}
         </div>
     );
 }

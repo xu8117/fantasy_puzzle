@@ -19,7 +19,25 @@ import {siteConfig} from "@/config/site";
 import {ThemeSwitch} from "@/components/theme-switch";
 import {GithubIcon, HeartFilledIcon, Logo, SearchIcon, TwitterIcon,} from "@/components/icons";
 
+import {ConnectButton, useCurrentAccount} from '@mysten/dapp-kit';
+
+/*export function OwnedObjects() {
+    const account = useCurrentAccount()!;
+    const { data } =
+        useSuiClientQuery('getOwnedObjects', { owner: account.address });
+
+    return (
+        <ul>
+            {data.data.map((object) => (
+                <li key={object.data?.objectId}>{object.data?.objectId}</li>
+            ))}
+        </ul>
+    );
+}*/
+
 export const Navbar = () => {
+
+    const account = useCurrentAccount();
     const searchInput = (
         <Input
             aria-label="Search"
@@ -97,6 +115,8 @@ export const Navbar = () => {
                         Sponsor
                     </Button>
                 </NavbarItem>
+                <ConnectButton/>
+                <section>{account ? `Your address is ${account.address}` : 'No wallet connected'}</section>
             </NavbarContent>
 
             <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
